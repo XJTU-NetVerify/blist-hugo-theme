@@ -1,25 +1,37 @@
 <div class="p-0 flex flex-col justify-center items-center">
-  <a href="{{ .Permalink }}">
-  {{ if .Params.image }}
+  {{ if .Params.alumni }}
   <div class="relative">
-    <img src="{{ .Params.image }}" alt="{{ .Params.title }}" class="m-0 mb-4 rounded-full shadow-sm h-24 object-cover" style="height: 6rem;" />
-  </div>
   {{ else }}
+  <a href="{{ .Permalink }}">
   <div class="relative">
-    <img src="{{ .Site.Params.favicon }}" alt="{{ .Params.title }}" class="m-0 mb-4 rounded-full shadow-sm w-full h-24 object-cover" height="height: 6rem;" />
-  </div>
   {{ end }}
+    {{ if .Params.image }}
+    <img src="{{ .Params.image }}" alt="{{ .Params.title }}" class="m-0 mb-4 rounded-full shadow-sm h-24 w-24 object-cover" style="height: 6rem; width: 6rem;" />
+    {{ else }}
+    <img src="/images/placeholder-avatar.svg" alt="{{ .Params.title }}" class="m-0 mb-4 rounded-full shadow-sm h-24 w-24 object-cover" style="height: 6rem; width: 6rem;" />
+    {{ end }}
+  </div>
+  {{ if not .Params.alumni }}
   </a>
+  {{ end }}
 
   <div class="my-2 flex flex-col flex-wrap items-center">
     <div class="p-0">
+      {{ if .Params.alumni }}
+      <div class="text-xl font-semibold">{{ .Params.title }}</div>
+      {{ else }}
       <a href="{{ .Permalink }}">
         <div class="text-xl font-semibold">{{ .Params.title }}</div>
       </a>
+      {{ end }}
     </div>
 
     <h5 class="text-sm font-light italic text-gray-500">
+      {{ if .Params.alumni }}
+      Alumnus
+      {{ else }}
       {{ .Params.degree }}
+      {{ end }}
     </h5>
   </div>
 

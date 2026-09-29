@@ -6,13 +6,13 @@
       </div>
       <br />
 
-      {{ if .Params.mentor }}
+      {{ if .Params.faculty }}
 
         <div class="text-2xl font-semibold">
-          {{ .Params.mentor }}
+          {{ .Params.faculty }}
         </div>
         <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
-          {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "mentor") ".Params.Alumni" "ne" true) }}
+          {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "faculty") ".Params.Alumni" "ne" true) }}
             {{- partial "people-card.html" . -}}
           {{ end }}
         </div>
@@ -215,15 +215,17 @@
             {{ .degree }}, {{ .time }}
           </div>
 
-          {{ if .rank }}
-          <div class="flex flex-row text-base italic" style="gap: 1rem;">
+          {{ if or .rank .gpa .averagescore }}
+          <div class="flex flex-row flex-wrap text-base italic" style="gap: 1rem;">
 
+            {{ if .rank }}
             <div class="flex flex-row" style="gap: 0.25rem;">
               <div class="text-gray-500 dark:text-gray-200">
                 Rank:
               </div>
               {{ .rank }}
             </div>
+            {{ end }}
 
             {{ if .gpa }}
             <div class="flex flex-row" style="gap: 0.25rem;">

@@ -5,13 +5,13 @@
     </div>
     <br />
 
-    {{ if .Params.mentor }}
+    {{ if .Params.faculty }}
 
       <div class="text-2xl font-semibold">
-        {{ .Params.mentor }}
+        {{ .Params.faculty }}
       </div>
       <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
-        {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "mentor") ".Params.Alumni" "ne" true) }}
+        {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "faculty") ".Params.Alumni" "ne" true) }}
           {{- partial "people-card.html" . -}}
         {{ end }}
       </div>

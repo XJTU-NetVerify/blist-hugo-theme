@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Placeholder avatar">
+  <defs>
+    <clipPath id="clip-circle">
+      <circle cx="64" cy="64" r="64" />
+    </clipPath>
+  </defs>
+  <!-- Semi-transparent gray so the avatar blends with the page background in both
+       light and dark mode (dark mode is applied as a class on <html>, which an
+       <img>-loaded SVG cannot detect, so alpha is used instead of a color) -->
+  <g clip-path="url(#clip-circle)">
+    <rect width="128" height="128" fill="rgba(148,163,184,0.18)" />
+    <circle cx="64" cy="50" r="22" fill="rgba(148,163,184,0.45)" />
+    <path d="M64 80c-22 0-40 14.3-40 32v16h80v-16c0-17.7-18-32-40-32z" fill="rgba(148,163,184,0.45)" />
+  </g>
+</svg>

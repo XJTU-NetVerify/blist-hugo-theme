@@ -1,16 +1,16 @@
 <div class="p-0 flex flex-row sm:flex-col sm:justify-center items-center w-full gap-4">
   <a  href="{{ .Permalink }}">
   {{ if .Params.image }}
-    <img src="{{ .Params.image }}"        alt="{{ .Params.title }}" class="m-0 rounded-full shadow-sm h-24 w-24 sm:h-44 sm:w-44 object-cover" />
+  <img src="{{ .Params.image }}"        alt="{{ .Params.title }}" class="m-0 rounded-full shadow-sm h-24 w-24 sm:h-44 sm:w-44 object-cover" />
   {{ else }}
-    <img src="{{ .Site.Params.favicon }}" alt="{{ .Params.title }}" class="m-0 rounded-full shadow-sm h-24 w-24 sm:h-44 sm:w-44 object-cover" />
+  <img src="/images/placeholder-avatar.svg" alt="{{ .Params.title }}" class="m-0 rounded-full shadow-sm h-24 w-24 sm:h-44 sm:w-44 object-cover" />
   {{ end }}
   </a>
 
   <div class="sm:my-2 flex flex-col flex-wrap sm:items-center">
     <div class="p-0">
       <a href="{{ .Permalink }}">
-        <div class="text-xl font-semibold text-center">
+        <div class="text-xl font-semibold">
           {{ if eq $.Page.Language.LanguageName "English" }}
             {{ .Params.title }}
           {{ else }}
