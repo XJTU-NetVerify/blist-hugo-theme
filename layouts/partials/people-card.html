@@ -11,7 +11,7 @@
     <div class="p-0">
       <a href="{{ .Permalink }}">
         <div class="text-xl font-semibold">
-          {{ if eq $.Page.Language.LanguageName "English" }}
+          {{ if eq $.Page.Language.Label "English" }}
             {{ .Params.title }}
           {{ else }}
             {{ $title := "@1 (@2)"}}

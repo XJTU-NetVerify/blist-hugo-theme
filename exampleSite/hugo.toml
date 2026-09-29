@@ -9,7 +9,7 @@ DefaultContentLanguageInSubdir = true
   [languages.en]
     contentDir = "content/en" #English
     weight = 1
-    languageName = "English"
+    label = "English"
     [languages.en.params]
       introTitle = "Hey! I'm Katheryn Fox"
       introSubtitle = "26 y/o junior developer who enjoys social card games, blogging and painting"
@@ -38,7 +38,7 @@ DefaultContentLanguageInSubdir = true
   [languages.de]
     contentDir = "content/de" # Deutsch
     weight = 2
-    languageName = "Deutsch"
+    label = "Deutsch"
     title = "Blist (mehrsprachig)"
     [languages.de.params]
       description = "Modernes Blog-Theme für Ihre Hugo-Site."
@@ -64,7 +64,7 @@ DefaultContentLanguageInSubdir = true
   [languages.fr]
     contentDir = "content/fr" #French
     weight = 1
-    languageName = "Français"
+    label = "Français"
     [languages.fr.params]
       introTitle = "Salut! Je suis Katheryn Fox"
       introSubtitle = "Développeuse junior de 26 ans qui adore les jeux de société, le blogging et la peinture"
@@ -88,7 +88,7 @@ DefaultContentLanguageInSubdir = true
   [languages.dy]
     contentDir = "content/dy" #Example language
     weight = 3
-    languageName = "Test Language"
+    label = "Test Language"
 
 [params]
   # Enable the darkmode toggle in header

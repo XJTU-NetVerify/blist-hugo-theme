@@ -17,16 +17,19 @@
   
   {{ hugo.Generator }}
 
-  {{- $styles := resources.Get "css/styles.css" | postCSS (dict "config" "./assets/css/" "inlineImports" true "skipInlineImportsNotFound" true) -}}
   {{- if hugo.IsServer }}
+  {{- $styles := resources.Get "css/styles.css" | postCSS (dict "config" "./assets/css/" "inlineImports" true "skipInlineImportsNotFound" true) -}}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
   {{ else }}
-  {{- $styles := $styles| minify | fingerprint | resources.PostProcess -}}
+  {{ with (templates.Defer (dict "key" "global")) }}
+  {{- $styles := resources.Get "css/styles.css" | postCSS (dict "config" "./assets/css/" "inlineImports" true "skipInlineImportsNotFound" true) -}}
+  {{- $styles = $styles | minify | fingerprint -}}
   <link
     rel="stylesheet"
     href="{{ $styles.Permalink }}"
     integrity="{{ $styles.Data.Integrity }}"
   />
+  {{ end }}
   {{ end -}}
 
   <!-- KaTeX support -->
@@ -60,7 +63,7 @@
   {{ template "_internal/twitter_cards.html" . }}
   {{ template "_internal/schema.html" . }}
 
-  {{ if gt (len .Site.Languages) 1}}
-  <meta name="lang" content="{{ .Site.Language }}" />
+  {{ if hugo.IsMultilingual }}
+  <meta name="lang" content="{{ .Site.Language.Lang }}" />
   {{ end }}
 </head>
