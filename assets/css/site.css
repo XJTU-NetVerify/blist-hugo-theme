@@ -1,6 +1,6 @@
 /* Custom Styles */
 body {
-  font-family: "Helvetica Neue", "Helvetica", "Inter", sans-serif;
+  font-family: "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 /* Fonts */
@@ -9,47 +9,11 @@ body {
 @font-face {
   font-family: "Inter";
   font-style: normal;
-  font-weight: 300;
-  src: url("/fonts/inter-v3-latin-300.eot"); /* IE9 Compat Modes */
-  src: local(""),
-    url("/fonts/inter-v3-latin-300.eot?#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */ url("/fonts/inter-v3-latin-300.woff2") format("woff2"),
-    /* Super Modern Browsers */ url("/fonts/inter-v3-latin-300.woff")
-      format("woff"),
-    /* Modern Browsers */ url("/fonts/inter-v3-latin-300.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("/fonts/inter-v3-latin-300.svg#Inter")
-      format("svg"); /* Legacy iOS */
+  src: url("/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype");
 }
 /* inter-500 - latin */
 @font-face {
   font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  src: url("/fonts/inter-v3-latin-500.eot"); /* IE9 Compat Modes */
-  src: local(""),
-    url("/fonts/inter-v3-latin-500.eot?#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */ url("/fonts/inter-v3-latin-500.woff2") format("woff2"),
-    /* Super Modern Browsers */ url("/fonts/inter-v3-latin-500.woff")
-      format("woff"),
-    /* Modern Browsers */ url("/fonts/inter-v3-latin-500.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("/fonts/inter-v3-latin-500.svg#Inter")
-      format("svg"); /* Legacy iOS */
-}
-/* inter-700 - latin */
-@font-face {
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 700;
-  src: url("/fonts/inter-v3-latin-700.eot"); /* IE9 Compat Modes */
-  src: local(""),
-    url("/fonts/inter-v3-latin-700.eot?#iefix") format("embedded-opentype"),
-    /* IE6-IE8 */ url("/fonts/inter-v3-latin-700.woff2") format("woff2"),
-    /* Super Modern Browsers */ url("/fonts/inter-v3-latin-700.woff")
-      format("woff"),
-    /* Modern Browsers */ url("/fonts/inter-v3-latin-700.ttf")
-      format("truetype"),
-    /* Safari, Android, iOS */ url("/fonts/inter-v3-latin-700.svg#Inter")
-      format("svg"); /* Legacy iOS */
+  font-style: italic;
+  src: url("/fonts/Inter-Italic-VariableFont_opsz,wght.ttf") format("truetype");
 }
