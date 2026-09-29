@@ -10,21 +10,21 @@
     {{ $moreLabel = "展开更多新闻" }}
     {{ $lessLabel = "收起新闻" }}
   {{ end }}
-  <div class=" dark:bg-gray-900 container max-w-screen-lg px-6 py-12 mx-auto flex flex-col gap-4" style="margin-bottom: 3rem;">
-    <div class="text-4xl font-semibold">
+  <div class="container max-w-screen-lg px-6 py-12 mx-auto flex flex-col" style="margin-bottom: 3rem;">
+    <div class="text-2xl font-semibold">
     {{ if hugo.IsMultilingual }}
       {{ .Site.Params.news }}
     {{ else }}
       News
     {{ end }}
     </div>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col mt-4">
     {{ range (first $limit $newsPages) }}
       {{- partial "blog-card.html" . -}}
     {{ end }}
     </div>
     {{ if $hasMore }}
-      <div id="more-news" class="hidden flex-col gap-4">
+      <div id="more-news" class="hidden flex-col border-t-2 border-gray-200 dark:border-gray-700">
         {{ range (after $limit $newsPages) }}
           {{- partial "blog-card.html" . -}}
         {{ end }}
