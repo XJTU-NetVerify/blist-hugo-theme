@@ -14,16 +14,27 @@
         {{ end }}
         {{ $andLength := sub $length 2 }}
         {{ $length = sub $length 1 }}
+        {{ $peopleSlice := (where .Site.RegularPages "Type" "people") }}
 
         {{ range $k, $url := .Params.paper.author }}
           {{ if $url.url }}
             <a style="text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: #d4d4d8;" href="{{ $url.url }}">
-              {{ .name }}
+              {{ $url.name }}
             </a>
           {{ else if $url.id }}
-            <a style="text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: #d4d4d8;" href="/people/{{ $url.id }}">
-              {{ .name }}
-            </a>
+            {{ $isAlumni := false }}
+            {{ range $people := $peopleSlice }}
+              {{ if and (eq $url.id $people.Params.name) $people.Params.alumni }}
+                {{ $isAlumni = true }}
+              {{ end }}
+            {{ end }}
+            {{ if $isAlumni }}
+              <div>{{ $url.name }}</div>
+            {{ else }}
+              <a style="text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: #d4d4d8;" href="/people/{{ $url.id }}">
+                {{ $url.name }}
+              </a>
+            {{ end }}
           {{ else }}
             <div>{{ $url.name }}</div>
           {{ end }}
@@ -57,6 +68,17 @@
             <path fill="currentColor" d="M336 816h288v-72H336v72zm0-144h288v-72H336v72zm-72.283 288Q234 960 213 938.85T192 888V264q0-29.7 21.15-50.85T264 192h312l192 192v504q0 29.7-21.162 50.85Q725.676 960 695.96 960H263.717zM528 432V264H264v624h432V432H528zM264 264v189-189 624-624z"/>
           </svg>
           PDF
+        </a>
+      </span>
+      {{ end }}
+
+      {{ if .Params.preprint }}
+      <span class="inline-block">
+        <a class="flex flex-row" style="text-decoration-line: none; gap: 0.5rem;" href={{ .Params.preprint }}>
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline" height="1.4em" viewBox="180 96 600 960">
+            <path fill="currentColor" d="M336 816h288v-72H336v72zm0-144h288v-72H336v72zm-72.283 288Q234 960 213 938.85T192 888V264q0-29.7 21.15-50.85T264 192h312l192 192v504q0 29.7-21.162 50.85Q725.676 960 695.96 960H263.717zM528 432V264H264v624h432V432H528zM264 264v189-189 624-624z"/>
+          </svg>
+          Preprint
         </a>
       </span>
       {{ end }}
