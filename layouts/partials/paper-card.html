@@ -22,13 +22,13 @@
               {{ $url.name }}
             </a>
           {{ else if $url.id }}
-            {{ $isAlumni := false }}
+            {{ $hideLink := false }}
             {{ range $people := $peopleSlice }}
-              {{ if and (eq $url.id $people.Params.name) $people.Params.alumni }}
-                {{ $isAlumni = true }}
+              {{ if and (eq $url.id $people.Params.name) (eq $people.Layout "alumni") }}
+                {{ $hideLink = true }}
               {{ end }}
             {{ end }}
-            {{ if $isAlumni }}
+            {{ if $hideLink }}
               <div>{{ $url.name }}</div>
             {{ else }}
               <a style="text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: #d4d4d8;" href="/people/{{ $url.id }}">

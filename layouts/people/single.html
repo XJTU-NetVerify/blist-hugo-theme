@@ -1,54 +1,13 @@
 {{ define "main" }}
-  {{ if .IsSection }}
-    <div class="container max-w-screen-lg px-6 py-12 mx-auto flex flex-col flex-auto flex-wrap gap-8">
-      <div class="text-4xl font-semibold">
-        {{ .Content }}
-      </div>
-      <br />
-
-      {{ if .Params.faculty }}
-
-        <div class="text-2xl font-semibold">
-          {{ .Params.faculty }}
-        </div>
-        <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
-          {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "faculty") ".Params.Alumni" "ne" true) }}
-            {{- partial "people-card.html" . -}}
-          {{ end }}
-        </div>
-
-        <div class="text-2xl font-semibold">
-          {{ .Params.students }}
-        </div>
-
-      {{ end }}
-
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
-        {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "people") ".Params.Alumni" "ne" true) }}
-          {{- partial "people-card.html" . -}}
-        {{ end }}
-      </div>
-
-      <div class="text-2xl font-semibold mb-4 mt-4">
-        {{ .Params.alumni_title }}
-      </div>
-      <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
-        {{ range (where (where (where .Site.RegularPages.ByDate "Type" "people") "Layout" "people") ".Params.Alumni" "eq" true) }}
-          {{- partial "alumni-card.html" . -}}
-        {{ end }}
-      </div>
-
-    </div>
-  {{ else }}
   <div class="container max-w-screen-lg px-6 py-12 mx-auto flex flex-col sm:flex-row flex-auto prose prose-zinc dark:prose-invert gap-20 text-lg dark:text-white">
 
     <!-- left -->
-    <div class="flex flex-row sm:flex-col items-center prose prose-zinc dark:prose-invert max-w-none gap-4 sm:gap-6">
+    <div class="flex flex-row sm:flex-col w-full items-center prose prose-zinc dark:prose-invert max-w-none gap-4 sm:gap-6">
 
       <img class="rounded-full my-0 sm:max-w-40 max-w-32 flex-shrink aspect-square object-cover" src="{{ .Params.image }}" alt="{{ .Params.title }}"/>
-      <div class="flex flex-col flex-grow sm:items-center sm:mx-auto ">
+      <div class="flex flex-col flex-grow sm:items-center sm:mx-auto">
         <div class="font-bold">
-        {{ .Params.name_en }}
+        {{ or .Params.name_en .Params.title }}
         </div>
 
         <div class="text-sm font-light italic text-gray-500 dark:text-gray-200">
@@ -57,16 +16,18 @@
 
         <div class="flex flex-col mt-12 items-start">
 
+          {{ if .Params.email }}
           <a class="items-center flex flex-row gap-2" href="mailto:{{ .Params.email }}">
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
               <path fill="currentColor" d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
             </svg>
             <div class="whitespace-nowrap text-ellipsis">
-              <!-- Email -->
               {{ .Params.email }}
             </div>
           </a>
+          {{ end }}
 
+          {{ if .Params.github }}
           <a class="flex flex-row justify-center items-center" style="flex-wrap: nowrap; gap: 0.5rem;" href="https://github.com/{{ .Params.github }}">
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
               <path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/>
@@ -75,6 +36,7 @@
               Github
             </div>
           </a>
+          {{ end }}
 
           {{ range .Params.social }}
 
@@ -132,8 +94,8 @@
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
               <path fill="currentColor" d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"/>
             </svg>
-            <div class="whitespace-nowrap">
-              {{ .url }}
+            <div>
+              Homepage
             </div>
           </a>
           {{ end }}
@@ -178,17 +140,19 @@
     <!-- right -->
     <div class="flex flex-col" style="gap: 1.5rem;">
 
-      <!-- <h1 style="margin-bottom: 0em;"> -->
       <div class="font-extrabold text-4xl">
         {{ .Params.title }}
       </div>
 
+      {{ if .Params.introduction }}
       <div>
         {{ range .Params.introduction }}
         <p class="dark:text-gray-200">{{ .content }}</p>
         {{ end }}
       </div>
+      {{ end }}
 
+      {{ if .Params.research }}
       <div class="font-extrabold text-2xl">
         Research Interest
       </div>
@@ -197,27 +161,152 @@
         <li>{{ .interest }}</li>
         {{ end }}
       </ul>
+      {{ end }}
 
-      <!-- education -->
-      <!-- <h2 style="margin-top: 0em;"> -->
+      <!-- publications -->
+      {{ $paperSlice := where .Site.RegularPages.ByDate.Reverse "Type" "paper" }}
+      {{ $author := .Params.name }}
+      {{ $publications := slice }}
+
+      {{ range $paper := $paperSlice }}
+        {{ $isAuthor := false }}
+        {{ range $paperAuthor := $paper.Params.paper.author }}
+          {{ if eq $author $paperAuthor.id }}
+            {{ $isAuthor = true }}
+          {{ end }}
+        {{ end }}
+        {{ if $isAuthor }}
+          {{ $publications = $publications | append $paper }}
+        {{ end }}
+      {{ end }}
+
+      <!-- selected candidates: (ccf A and top) or selected -->
+      {{ $selectedCandidates := slice }}
+      {{ range $paper := $publications }}
+        {{ if or $paper.Params.selected (and $paper.Params.top (eq $paper.Params.ccf "A")) }}
+          {{ $selectedCandidates = $selectedCandidates | append $paper }}
+        {{ end }}
+      {{ end }}
+
+      {{ $selectedPublications := first 5 $selectedCandidates }}
+      {{ $selectedKeys := slice }}
+      {{ range $selectedPublications }}
+        {{ $selectedKeys = $selectedKeys | append .RelPermalink }}
+      {{ end }}
+
+      {{ $otherPublications := slice }}
+      {{ range $paper := $publications }}
+        {{ if not (in $selectedKeys $paper.RelPermalink) }}
+          {{ $otherPublications = $otherPublications | append $paper }}
+        {{ end }}
+      {{ end }}
+
+      {{ if gt (len $publications) 0 }}
+        {{ if and .Params.select_publications (gt (len $selectedPublications) 0) }}
+          <div class="font-extrabold text-2xl">
+            Selected Publications
+          </div>
+          <div class="flex flex-col dark:text-gray-200">
+            {{ range $selectedPublications }}
+              {{- partial "paper-card.html" . -}}
+            {{ end }}
+          </div>
+          {{ if gt (len $otherPublications) 0 }}
+            <div id="more-publications" class="hidden flex-col dark:text-gray-200">
+              {{ range $otherPublications }}
+                {{- partial "paper-card.html" . -}}
+              {{ end }}
+            </div>
+            <div>
+              <button
+                type="button"
+                class="mt-2 inline-flex items-center justify-center px-4 py-1.5 text-sm rounded border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-100 cursor-pointer"
+                data-more-text="Show all"
+                data-less-text="Show fewer"
+                onclick="(function(btn){var target=document.getElementById('more-publications');if(!target){return;}var isHidden=target.classList.contains('hidden');if(isHidden){target.classList.remove('hidden');target.classList.add('flex');btn.textContent=btn.dataset.lessText;}else{target.classList.add('hidden');target.classList.remove('flex');btn.textContent=btn.dataset.moreText;}})(this);"
+              >Show all</button>
+            </div>
+          {{ end }}
+        {{ else }}
+          <div class="font-extrabold text-2xl">
+            Publications
+          </div>
+          <div class="flex flex-col dark:text-gray-200">
+            {{ range $publications }}
+              {{- partial "paper-card.html" . -}}
+            {{ end }}
+          </div>
+        {{ end }}
+      {{ end }}
+
+      {{ if .Params.service }}
       <div class="font-extrabold text-2xl">
-        Education Experience
+        Service
+      </div>
+      <div class="flex flex-col text-lg dark:text-gray-200">
+        {{ range .Params.service }}
+        <div class="mb-4 flex-1">
+          <div class="flex flex-col">
+            <div>
+              {{ .commission }}
+            </div>
+            <ul class="my-0">
+            {{ range .conference }}
+              <li class="text-base my-0">{{ . }}</li>
+            {{ end }}
+            </ul>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <!-- work -->
+      {{ if .Params.work }}
+      <div class="font-extrabold text-2xl">
+        Work Experiences
       </div>
       <div class="flex flex-col gap-2 dark:text-gray-200">
+        {{ if reflect.IsSlice .Params.work }}
+          {{ range .Params.work }}
+          <div style="min-width: 16rem;">
+            <div class="flex flex-col" style="gap: 0.5rem;">
+              {{ .school }}
+            </div>
+
+            <div class="text-lg italic text-gray-500 dark:text-gray-200" style="margin-top: 0.125rem; margin-bottom: 0.125rem;">
+              {{ .degree }}{{ if and .degree .time }}, {{ end }}{{ .time }}
+            </div>
+          </div>
+          {{ end }}
+        {{ else }}
+          <div>{{ .Params.work }}</div>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <!-- education -->
+      {{ if .Params.education }}
+      <div class="font-extrabold text-2xl">
+        Education
+      </div>
+      <div class="flex flex-col gap-4 dark:text-gray-200">
         {{ range .Params.education }}
         <div class="flex-1">
-          {{ .school }}
+          <div>{{ .school }}</div>
+
+          {{ if .major }}
           <div class="text-base font-light text-gray-500 dark:text-gray-200 italic">
-          {{ .major }}
+            {{ .major }}
           </div>
+          {{ end }}
 
           <div class="text-base font-light text-gray-500 dark:text-gray-200 italic">
-            {{ .degree }}, {{ .time }}
+            {{ .degree }}{{ if and .degree .time }}, {{ end }}{{ .time }}
           </div>
 
           {{ if or .rank .gpa .averagescore }}
           <div class="flex flex-row flex-wrap text-base italic" style="gap: 1rem;">
-
             {{ if .rank }}
             <div class="flex flex-row" style="gap: 0.25rem;">
               <div class="text-gray-500 dark:text-gray-200">
@@ -244,34 +333,14 @@
               {{ .averagescore }}
             </div>
             {{ end }}
-
           </div>
           {{ end }}
-
-<!--           {{ if .work }}
-          <div class="flex flex-row flex-wrap">
-            <div class="text-gray-500">
-              Research:&nbsp;
-            </div>
-            <div>
-            {{ .work }}
-            </div>
-          </div>
-          {{ end }} -->
-
-          <!-- <div class="flex flex-row" style="gap: 0.25rem;"> -->
-          <!--   <div class="text-gray-500"> -->
-          <!--     Time: -->
-          <!--   </div> -->
-          <!--   {{ .time }} -->
-          <!-- </div> -->
-
         </div>
         {{ end }}
       </div>
+      {{ end }}
 
-      <!-- practice -->
-      <!-- <h2 style="margin-top: 0em;"> -->
+      <!-- practice / internship -->
       {{ if .Params.practice }}
       <div class="font-extrabold text-2xl">
         Internship
@@ -296,52 +365,46 @@
       </div>
       {{ end }}
 
-      <!-- paper -->
-      {{ $paperSlice := (where (where .Site.RegularPages.ByDate.Reverse "Type" "paper") "Type" "paper") }}
-      {{ $author := .Params.name }}
-      {{ $flag := false }}
-      {{ $publications := slice }}
-
-      {{ range $paper := $paperSlice }}
-        {{ range $paperAuthor := $paper.Params.paper.author }}
-          {{ if eq $author $paperAuthor.id }}
-            {{ $flag = true }}
-            {{ $publications = $publications | append $paper }}
-          {{ end }}
-        {{ end }}
-      {{ end }}
-
-      {{ if eq $flag true}}
+      <!-- award / honor -->
+      {{ if or .Params.award .Params.honor }}
       <div class="font-extrabold text-2xl">
-        Publications
+        Awards & Honors
       </div>
-      <div class="flex flex-col dark:text-gray-200">
-        {{ range $publications }}
-          {{- partial "paper-card.html" . -}}
-        {{ end }}
-      </div>
-      {{ end }}
-
-      <!-- award -->
-      {{ if .Params.award }}
-      <div class="font-extrabold text-2xl">
-        Award
-      </div>
-      <div class="flex flex-col dark:text-gray-200" style="gap: 2rem;">
+      <div class="flex flex-col dark:text-gray-200" style="gap: 1.5rem;">
         {{ range .Params.award }}
         <div class="flex-1">
-          <div class="flex flex-row" style="gap: 0.25rem;">
-            {{ .title }}
+          <div class="flex flex-row flex-wrap" style="gap: 0.25rem;">
+            <div>{{ .title }}</div>
+            {{ if .time }}
+            <div class="italic text-gray-500 dark:text-gray-200">({{ .time }})</div>
+            {{ end }}
           </div>
-          {{ if .icon }}
-            <div class="text-red-500 text-base mt-0.5">
-                <svg class="inline-block" style="vertical-align: text-bottom" height="1.2em" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="medal" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                  <path fill="currentColor" d="M4.1 38.2C1.4 34.2 0 29.4 0 24.6C0 11 11 0 24.6 0H133.9c11.2 0 21.7 5.9 27.4 15.5l68.5 114.1c-48.2 6.1-91.3 28.6-123.4 61.9L4.1 38.2zm503.7 0L405.6 191.5c-32.1-33.3-75.2-55.8-123.4-61.9L350.7 15.5C356.5 5.9 366.9 0 378.1 0H487.4C501 0 512 11 512 24.6c0 4.8-1.4 9.6-4.1 13.6zM80 336a176 176 0 1 1 352 0A176 176 0 1 1 80 336zm184.4-94.9c-3.4-7-13.3-7-16.8 0l-22.4 45.4c-1.4 2.8-4 4.7-7 5.1L168 298.9c-7.7 1.1-10.7 10.5-5.2 16l36.3 35.4c2.2 2.2 3.2 5.2 2.7 8.3l-8.6 49.9c-1.3 7.6 6.7 13.5 13.6 9.9l44.8-23.6c2.7-1.4 6-1.4 8.7 0l44.8 23.6c6.9 3.6 14.9-2.2 13.6-9.9l-8.6-49.9c-.5-3 .5-6.1 2.7-8.3l36.3-35.4c5.6-5.4 2.5-14.8-5.2-16l-50.1-7.3c-3-.4-5.7-2.4-7-5.1l-22.4-45.4z"></path>
-                </svg>
+          {{ if .award }}
+            {{ if .icon }}
+              <div class="text-red-500 text-base mt-0.5">
+                  <svg class="inline-block" style="vertical-align: text-bottom" height="1.2em" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="medal" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M4.1 38.2C1.4 34.2 0 29.4 0 24.6C0 11 11 0 24.6 0H133.9c11.2 0 21.7 5.9 27.4 15.5l68.5 114.1c-48.2 6.1-91.3 28.6-123.4 61.9L4.1 38.2zm503.7 0L405.6 191.5c-32.1-33.3-75.2-55.8-123.4-61.9L350.7 15.5C356.5 5.9 366.9 0 378.1 0H487.4C501 0 512 11 512 24.6c0 4.8-1.4 9.6-4.1 13.6zM80 336a176 176 0 1 1 352 0A176 176 0 1 1 80 336zm184.4-94.9c-3.4-7-13.3-7-16.8 0l-22.4 45.4c-1.4 2.8-4 4.7-7 5.1L168 298.9c-7.7 1.1-10.7 10.5-5.2 16l36.3 35.4c2.2 2.2 3.2 5.2 2.7 8.3l-8.6 49.9c-1.3 7.6 6.7 13.5 13.6 9.9l44.8-23.6c2.7-1.4 6-1.4 8.7 0l44.8 23.6c6.9 3.6 14.9-2.2 13.6-9.9l-8.6-49.9c-.5-3 .5-6.1 2.7-8.3l36.3-35.4c5.6-5.4 2.5-14.8-5.2-16l-50.1-7.3c-3-.4-5.7-2.4-7-5.1l-22.4-45.4z"></path>
+                  </svg>
+                  {{ .award }}
+              </div>
+            {{ else }}
+              <div class="text-base text-gray-600 dark:text-gray-300">
                 {{ .award }}
-            </div>
-          {{ else }}
-            {{ .award }}
+              </div>
+            {{ end }}
+          {{ end }}
+        </div>
+        {{ end }}
+
+        {{ range .Params.honor }}
+        <div class="flex flex-row mb-2">
+          <div>
+            {{ .content }}{{ if .time }}，{{ end }}
+          </div>
+          {{ if .time }}
+          <div class="italic text-gray-500 dark:text-gray-200">
+            {{ .time }}
+          </div>
           {{ end }}
         </div>
         {{ end }}
@@ -351,5 +414,4 @@
     </div>
 
   </div>
-  {{ end }}
 {{ end }}
