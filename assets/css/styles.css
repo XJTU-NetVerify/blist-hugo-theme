@@ -59,15 +59,8 @@ main {
 }
 
 .bg-blue-100 {
-  background-color: rgba(219, 234, 254, 0.75 );
+  background-color: rgba(219, 234, 254, 0.75);
 }
-/* 
-.header {
-  background-color: rgba(219, 234, 254, 0.75 );
-}
-.header:is(.dark *) {
-  background-color: rgba(17, 24, 39, 0.75);
-} */
 
 .swiper-slide img {
   width: 100%;
@@ -76,49 +69,35 @@ main {
   max-height: 75vh;
   object-fit: cover;
 }
-#swiper-mask {
-  z-index: 5;
-  background-image: linear-gradient(180deg, transparent 0% 50%, rgb(23, 37, 84) 100%);
-  /* background-image: linear-gradient(180deg, rgba(174, 212, 254, 1) 0%, transparent 10% 50%, rgb(23, 37, 84) 100%); */
+
+/*
+ * Shared band surface = the navbar panel tint composited over the page
+ * background, so a band reads as the same material as the navbar:
+ *   light: rgba(234, 243, 255, .75) over #fff      -> #eff6ff
+ *   dark:  rgba(17, 24, 39, .75)    over gray-800  -> #151c2b
+ */
+.section-tint {
+  background-color: #eff6ff;
 }
-#swiper-mask:is(.dark *) {
-  background-image: linear-gradient(180deg, transparent 0% 50%, rgb(31, 41, 55) 100%);
+
+.dark .section-tint {
+  background-color: #151c2b;
 }
+
 .about-section {
-  /* background-image: linear-gradient(180deg, rgb(23, 37, 84) 0%, rgb(27, 65, 193) 100%); */
-  padding-top: -10vh;
-  background-image: radial-gradient(120% 160% at 50% 180%, rgb(27, 65, 193) 0%, rgb(23, 37, 84) 100%);;
-  /* background-color: rgb(99, 158, 241); */
-  /* color: white; */
-}
-/* Rectangle 2 */
-.about-section h2 {
-  color: white;
+  position: relative;
 }
 
-
-.about-section:is(.dark *) {
-  background-image: unset;
-  background-color: rgb(31, 41, 55);
+.about-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-image: linear-gradient(to right, #248bd6, #3bca22);
 }
 
-.header {
-  background-color: rgba(219, 234, 254, 0.75) !important;
-  backdrop-filter: blur(16px) !important;
-  transition: background-color 200ms ease-out;
-}
-.header:is(.dark *) {
-  background-color: rgba(17, 24, 39, 0.75) !important;
-}
-.header > .container {
-  box-shadow: 0 0 24px transparent;
-}
-.header.menu-expanded {
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.1) !important;
-}
-.header.menu-expanded .header-items {
-  align-items: flex-start;
-}
 .title-container {
   margin-bottom: 6vh;
   color: white;

@@ -1,0 +1,540 @@
+{{- /*
+  Navigation bar (new implementation).
+
+  Behaviour:
+    * Fixed to the top of the viewport. It is tall while the page is at the
+      top and smoothly shrinks as the page scrolls, casting a soft shadow over
+      the content underneath.
+    * Uses the shared site colour scheme (a translucent, blurred panel that
+      adapts to light / dark mode).
+    * On desktop the links sit inline; on mobile they collapse into a
+      hamburger button that reveals an animated, full-width dropdown.
+
+  The scroll progress is published as the `--nav-progress` custom property
+  (0 = top of page, 1 = fully shrunk) which drives both the height and the
+  shadow through CSS `calc()`.
+*/ -}}
+{{- $currentSection := .CurrentSection.Name -}}
+<header id="site-nav" class="site-nav" role="banner">
+  <div class="site-nav__inner">
+    {{- /* Brand logos */ -}}
+    <div class="site-nav__brand">
+      {{- range .Site.Params.logo -}}
+      <a class="site-nav__brand-link" href="{{ .url }}" aria-label="{{ $.Site.Title }}">
+        <img class="site-nav__logo site-nav__logo--light" src="{{ .light }}" alt="{{ $.Site.Title }}" />
+        <img class="site-nav__logo site-nav__logo--dark" src="{{ .dark }}" alt="{{ $.Site.Title }}" />
+      </a>
+      {{- end -}}
+      <a class="site-nav__brand-link" href="{{ .Site.Home.RelPermalink }}" aria-label="{{ .Site.Title }}">
+        <img class="site-nav__logo site-nav__logo--light" src="{{ .Site.Params.teamLogo }}" alt="{{ .Site.Title }}" />
+        <img class="site-nav__logo site-nav__logo--dark" src="{{ .Site.Params.teamLogoDark }}" alt="{{ .Site.Title }}" />
+      </a>
+    </div>
+
+    {{- /* Hamburger button (mobile only) */ -}}
+    <button class="site-nav__toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-nav-menu">
+      <span class="site-nav__toggle-bar"></span>
+      <span class="site-nav__toggle-bar"></span>
+      <span class="site-nav__toggle-bar"></span>
+    </button>
+
+    {{- /* Collapsible menu: inline on desktop, dropdown on mobile */ -}}
+    <div id="site-nav-menu" class="site-nav__menu">
+      <ul class="site-nav__list">
+        {{- range .Site.Menus.main -}}
+        {{- $isJoin := eq .Name "Join us" -}}
+        {{- $isActive := eq .Name $currentSection -}}
+        <li class="site-nav__item">
+          <a class="site-nav__link{{ if $isJoin }} site-nav__link--button{{ end }}{{ if $isActive }} is-active{{ end }}"
+             href="{{ .URL | relLangURL }}"{{ if $isActive }} aria-current="page"{{ end }}>{{ .Name }}</a>
+        </li>
+        {{- end -}}
+      </ul>
+
+      <div class="site-nav__controls">
+        {{- if hugo.IsMultilingual -}}
+          {{- if ge (len hugo.Sites) 3 -}}
+          <div class="site-nav__lang">
+            <button class="site-nav__control site-nav__lang-trigger language-switcher" type="button" aria-haspopup="true" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <circle cx="12" cy="12" r="9" />
+                <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                <path d="M12.5 3a17 17 0 0 1 0 18" />
+              </svg>
+              <span class="site-nav__control-label">{{ i18n "languageSwitcherLabel" }}</span>
+            </button>
+            <div class="site-nav__lang-menu language-dropdown hidden">
+              {{- range hugo.Sites -}}
+              {{- if not (eq .Language.Lang $.Site.Language.Lang) -}}
+              <a class="site-nav__lang-link" href="/{{ .Language.Lang }}/" lang="{{ .Language.Lang }}">{{ default .Language.Lang .Language.Label }}</a>
+              {{- end -}}
+              {{- end -}}
+            </div>
+          </div>
+          {{- else -}}
+            {{- range hugo.Sites -}}
+            {{- if not (eq .Language.Lang $.Site.Language.Lang) -}}
+            <a class="site-nav__control site-nav__lang-link" href="/{{ .Language.Lang }}/" lang="{{ .Language.Lang }}" aria-label="{{ i18n "languageSwitcherLabel" }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <circle cx="12" cy="12" r="9" />
+                <line x1="3.6" y1="9" x2="20.4" y2="9" />
+                <line x1="3.6" y1="15" x2="20.4" y2="15" />
+                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                <path d="M12.5 3a17 17 0 0 1 0 18" />
+              </svg>
+              <span class="site-nav__control-label">{{ if eq .Language.Lang "zh" }}中文{{ else }}{{ default .Language.Lang .Language.Label }}{{ end }}</span>
+            </a>
+            {{- end -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- if .Site.Params.enableSearch -}}
+        <button class="site-nav__control open-search" type="button" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <circle cx="10" cy="10" r="7" />
+            <line x1="21" y1="21" x2="15" y2="15" />
+          </svg>
+        </button>
+        {{- end -}}
+
+        {{- if .Site.Params.darkModeToggle -}}
+        <button class="site-nav__control toggle-dark-mode" type="button" aria-label="Toggle dark mode">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <circle cx="12" cy="12" r="3" />
+            <line x1="12" y1="5" x2="12" y2="5.01" />
+            <line x1="17" y1="7" x2="17" y2="7.01" />
+            <line x1="19" y1="12" x2="19" y2="12.01" />
+            <line x1="17" y1="17" x2="17" y2="17.01" />
+            <line x1="12" y1="19" x2="12" y2="19.01" />
+            <line x1="7" y1="17" x2="7" y2="17.01" />
+            <line x1="5" y1="12" x2="5" y2="12.01" />
+            <line x1="7" y1="7" x2="7" y2="7.01" />
+          </svg>
+        </button>
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* ------------------------------------------------------------------ *
+   * Navigation bar
+   * ------------------------------------------------------------------ */
+  :root {
+    --nav-height-top: 8rem;    /* height while at the top of the page        */
+    --nav-height-shrunk: 4rem; /* height once the page has been scrolled     */
+    /* Brand = the two logos together. */
+    --nav-brand-width: 14rem;                                        /* k1: width when shrunk  */
+    --nav-brand-width-top: min(max(70vw, var(--nav-brand-width)), 20rem); /* k2: width when expanded */
+  }
+
+  .site-nav {
+    --nav-progress: 0; /* 0 -> expanded, 1 -> shrunk (driven by JS) */
+    /* Current bar height, reused to size the logos. */
+    --nav-height: calc(var(--nav-height-top) - (var(--nav-height-top) - var(--nav-height-shrunk)) * var(--nav-progress));
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    height: var(--nav-height);
+    border-bottom: 1px solid rgba(168, 173, 184, calc(0.25 * var(--nav-progress)));
+    box-shadow: 0 calc(var(--nav-progress) * 6px) calc(var(--nav-progress) * 24px) rgba(0, 0, 0, calc(var(--nav-progress) * 0.06));
+    transition: box-shadow 150ms ease-out;
+  }
+  .dark .site-nav {
+    border-bottom: 1px solid rgba(49, 50, 53, calc(0.25 * var(--nav-progress)));
+    box-shadow: 0 calc(var(--nav-progress) * 6px) calc(var(--nav-progress) * 24px) rgba(0, 0, 0, calc(var(--nav-progress) * 0.12));
+  }
+  /*
+   * The blurred panel lives on a ::before layer rather than on .site-nav
+   * itself. An element with backdrop-filter becomes a "backdrop root", which
+   * would make the nested mobile dropdown unable to sample the page behind it
+   * (its blur is silently dropped). Keeping the panel as a sibling of the
+   * menu lets the dropdown blur the real page content.
+   */
+  .site-nav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    /*
+     * Alpha follows the scroll progress: very transparent (5%) while the bar
+     * is expanded at the top, fading into the full 75% tint as it shrinks.
+     */
+    background-image: linear-gradient(
+        rgba(234, 243, 255, 0.75) 0%,
+        rgba(234, 243, 255, calc(0.60 + 0.15 * var(--nav-progress))) 20%,
+        rgba(234, 243, 255, calc(0.05 + 0.7 * var(--nav-progress))) 90%,
+        rgba(234, 243, 255, calc(0.75 * var(--nav-progress)))
+    );
+    -webkit-backdrop-filter: blur(calc(16px * var(--nav-progress)));
+    backdrop-filter: blur(calc(16px * var(--nav-progress)));
+    transition: background-color 200ms ease-out;
+  }
+  .dark .site-nav::before {
+    background-image: linear-gradient(
+        rgba(17, 24, 39, 0.75) 0%,
+        rgba(17, 24, 39, calc(0.60 + 0.15 * var(--nav-progress))) 20%,
+        rgba(17, 24, 39, calc(0.05 + 0.7 * var(--nav-progress))) 90%,
+        rgba(17, 24, 39, calc(0.75 * var(--nav-progress)))
+    );
+  }
+
+  .site-nav__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 100%;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Brand ---------------------------------------------------------- */
+  .site-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    /*
+     * The brand's total width (both logos) is a linear function of the scroll
+     * progress:  width = k2 * (1 - progress) + k1 * progress
+     * where k1 = --nav-brand-width (shrunk) and
+     * k2 = min(max(70% of the viewport, k1), 20rem) (--nav-brand-width-top).
+     */
+    width: calc(var(--nav-brand-width-top) * (1 - var(--nav-progress)) + var(--nav-brand-width) * var(--nav-progress));
+  }
+  .site-nav__brand-link {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+  }
+  /*
+   * The two logos share the brand in a fixed proportion (independent of the
+   * scroll). The ratio is chosen so both keep the same rendered height given
+   * their aspect ratios (ants 3.35:1, netverify 3.57:1); adjust the flex
+   * factors to change the split.
+   */
+  .site-nav__brand-link:first-child { flex: 47 1 0; }
+  .site-nav__brand-link:last-child { flex: 50 1 0; }
+  .site-nav__logo {
+    /* Fill the share of the brand assigned to the logo; height follows to keep
+     * the intrinsic aspect ratio (never stretched). */
+    width: 100%;
+    height: auto;
+  }
+  .site-nav__logo--dark { display: none; }
+  .dark .site-nav__logo--light { display: none; }
+  .dark .site-nav__logo--dark { display: inline; }
+
+  /* Desktop menu --------------------------------------------------- */
+  .site-nav__menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    /* The menu keeps its natural size; the brand shrinks instead. */
+    flex-shrink: 0;
+  }
+  .site-nav__list {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .site-nav__item { display: flex; }
+
+  .site-nav__link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+  .site-nav__link:hover,
+  .site-nav__link.is-active {
+    color: #5889ed;
+  }
+  .site-nav__link:hover {
+    text-decoration: underline;
+    text-decoration-color: #5889ed;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .site-nav__link--button {
+    padding: 3px 12px;
+    border: 2px solid rgba(108, 114, 127, 1);
+    border-radius: 6px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    transition: background-color 100ms ease-out, color 100ms ease-out, border-color 100ms ease-out;
+  }
+  .site-nav__link--button:hover {
+    background-color: #5889ed;
+    border-color: transparent;
+    color: #fff;
+    text-decoration: none;
+  }
+  .dark .site-nav__link--button { border-color: #fff; }
+
+  /* Controls (language / search / dark mode) ----------------------- */
+  .site-nav__controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .site-nav__control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 150ms ease-out;
+  }
+  .site-nav__control:hover { color: #5889ed; }
+  .site-nav__lang { position: relative; }
+  .site-nav__lang-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    background-color: #f3f4f6;
+    color: #111827;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    z-index: 10;
+  }
+  .dark .site-nav__lang-menu {
+    background-color: #111827;
+    color: #fff;
+  }
+  .site-nav__lang-menu .site-nav__lang-link {
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+  }
+  .site-nav__lang-menu .site-nav__lang-link:hover { background-color: rgba(148, 163, 184, 0.25); }
+
+  /* Hamburger button ---------------------------------------------- */
+  .site-nav__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .site-nav__toggle-bar {
+    width: 1.5rem;
+    height: 2px;
+    border-radius: 2px;
+    background-color: currentColor;
+    transition: transform 250ms ease, opacity 150ms ease;
+  }
+  .site-nav.is-open .site-nav__toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .site-nav.is-open .site-nav__toggle-bar:nth-child(2) { opacity: 0; }
+  .site-nav.is-open .site-nav__toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Content clears the expanded bar */
+  main { margin-top: var(--nav-height-top); }
+  /* The intro page starts its hero at the very top, behind the translucent bar */
+  main.main--immersive { margin-top: 0; }
+
+  /* Mobile --------------------------------------------------------- */
+  @media (max-width: 767.98px) {
+    .site-nav__toggle {
+      display: flex;
+      align-items: flex-end;
+      /* Pin to the right so the (possibly wide) logos overlap it instead of
+       * pushing it off-screen. */
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /*
+     * Floating, rounded, blurred card. A distinct surface (rather than a
+     * full-width sheet attached to the bar) so it reads cohesively whether the
+     * navbar is expanded/transparent at the top or shrunk/tinted when scrolled.
+     */
+    .site-nav__menu {
+      position: absolute;
+      z-index: 4;
+      top: calc(100% - 0.5rem + 1rem * var(--nav-progress)); /* gap below the navbar */
+      left: 0.5rem;
+      right: 0.5rem;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      max-height: 0;
+      padding: 0 0.5rem;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(-0.5rem) scale(0.97);
+      transform-origin: top center;
+      pointer-events: none;
+      border-radius: 1rem;
+      border: 1px solid rgba(168, 173, 184, calc(0.25 * var(--nav-progress)));
+      background-color: rgba(234, 243, 255, calc(0.5 + 0.25 * var(--nav-progress)));
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+      transition: max-height 300ms ease, opacity 220ms ease, transform 300ms ease, padding 300ms ease;
+    }
+    .dark .site-nav__menu {
+      border-color: rgba(49, 50, 53, calc(0.25 * var(--nav-progress)));
+      background-color: rgba(17, 24, 39, calc(0.5 + 0.25 * var(--nav-progress)));
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.40);
+    }
+    .site-nav.is-open .site-nav__menu {
+      /* Room for the navbar + gap + a small bottom margin. */
+      max-height: calc(100vh - var(--nav-height) - 1.5rem);
+      max-height: calc(100dvh - var(--nav-height) - 1.5rem);
+      padding: 0.75rem;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .site-nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+    }
+    .site-nav__item { border: 0; }
+    .site-nav__link {
+      display: block;
+      padding: 0.75rem 0.75rem;
+      border-radius: 0.6rem;
+    }
+    .site-nav__link:hover {
+      background-color: rgba(88, 137, 237, 0.12);
+      text-decoration: none;
+    }
+    .site-nav__link.is-active { background-color: rgba(88, 137, 237, 0.14); }
+    .site-nav__link--button { display: inline-block; }
+
+    .site-nav__controls {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      padding: 0.75rem 0.75rem 0.25rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-nav,
+    .site-nav__menu,
+    .site-nav__toggle-bar {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var nav = document.getElementById('site-nav');
+    if (!nav) return;
+
+    /* --- Expand / shrink while scrolling ----------------------------- */
+    var SHRINK_DISTANCE = 90; // px of scroll over which the bar fully shrinks
+    var frame = 0;
+
+    function applyProgress() {
+      frame = 0;
+      var progress = window.scrollY / SHRINK_DISTANCE;
+      if (progress < 0) progress = 0;
+      if (progress > 1) progress = 1;
+      nav.style.setProperty('--nav-progress', progress.toFixed(3));
+    }
+    function requestUpdate() {
+      if (!frame) frame = window.requestAnimationFrame(applyProgress);
+    }
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    applyProgress();
+
+    /* --- Mobile dropdown --------------------------------------------- */
+    var toggle = nav.querySelector('.site-nav__toggle');
+    var menu = document.getElementById('site-nav-menu');
+    var menuList = nav.querySelector('.site-nav__list');
+    var desktop = window.matchMedia('(min-width: 768px)');
+
+    function isOpen() { return nav.classList.contains('is-open'); }
+    function setOpen(open) {
+      nav.classList.toggle('is-open', open);
+      if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    if (toggle) {
+      toggle.addEventListener('click', function (event) {
+        event.stopPropagation();
+        setOpen(!isOpen());
+      });
+    }
+    if (menuList) {
+      menuList.addEventListener('click', function (event) {
+        if (event.target.closest('a')) setOpen(false);
+      });
+    }
+    document.addEventListener('click', function (event) {
+      if (isOpen() && !nav.contains(event.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && isOpen()) setOpen(false);
+    });
+    function onBreakpoint(event) { if (event.matches) setOpen(false); }
+    if (desktop.addEventListener) desktop.addEventListener('change', onBreakpoint);
+    else if (desktop.addListener) desktop.addListener(onBreakpoint);
+
+    /* --- Dark mode --------------------------------------------------- */
+    var darkToggle = nav.querySelector('.toggle-dark-mode');
+    if (darkToggle) {
+      darkToggle.addEventListener('click', function () {
+        var dark = !document.documentElement.classList.contains('dark');
+        document.documentElement.classList.toggle('dark', dark);
+        try { localStorage.setItem('darkmode', dark ? 'dark' : 'light'); } catch (err) { /* ignore */ }
+      });
+    }
+    try {
+      var stored = localStorage.getItem('darkmode');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else if (stored === 'light') {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (err) { /* ignore */ }
+  })();
+</script>

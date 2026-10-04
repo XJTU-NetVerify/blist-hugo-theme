@@ -1,26 +1,9 @@
 
 {{ $swiperCss := resources.Get "css/swiper-bundle.min.css" }}
 {{ $swiper := resources.Get "js/swiper-bundle.min.js" }}
-<section class="bg-white dark:bg-gray-800 ">
-  <div class="swiper-container w-full relative z-0" style="margin-top: -3.2em; ">
+<section class="bg-white dark:bg-gray-800">
+  <div class="swiper-container w-full relative z-0">
     <div class="swiper w-full">
-      <div id="swiper-mask" class="w-full h-full absolute flex flex-col justify-end">
-        <!-- <h1 class="text-4xl font-bold" style="margin-bottom: 0.5rem;">{{ .Site.Params.introTitle | safeHTML}}</h1> -->
-        <!-- <div class="title-container container max-w-screen-lg mx-auto px-6"> -->
-        <!--   <a class="flex flex-col md:flex-row items-start md:items-center gap-6" href="/"> -->
-        <!--     {{ if .Site.Params.altLogo }} -->
-        <!--     <img class="alt-logo h-12 sm:h-14 md:h-16" src="{{ .Site.Params.altLogoDark }}"> -->
-        <!--     {{ end }} -->
-        <!--     <!-- {{ if .Site.Params.teamLogo }} -->
-        <!--     <img class="team-logo h-16 md:h-20" src="{{ .Site.Params.teamLogoDark }}"> -->
-        <!--     {{ end }} -->
-        <!--   </a> -->
-        <!--   <h1 class="text-5xl sm:text-6xl md:text-7xl mt-6 mb-2"> -->
-        <!--   {{ .Site.Params.introTitle | safeHTML }} -->
-        <!--   </h1> -->
-        <!--    -->
-        <!-- </div> -->
-      </div>
       <div class="swiper-wrapper relative">
         {{ range .Site.Params.introImages }}
         <div class="swiper-slide">
@@ -35,16 +18,16 @@
     <!-- <div class="swiper-pagination"></div> -->
     </div>
   </div>
-  <div class="about-section pb-6 mb-6 bg-blue-950 text-blue-50 overflow-visible">
-
-    <div class="container max-w-screen-lg mx-auto px-6 pb-12 flex flex-col gap-4 text-lg">
-      <!-- <img class="rounded-lg shadow-sm" src="{{ .Site.Params.introPhoto }}" alt="{{ .Site.Title }}" /> -->
-
-      <!-- <h2 class="text-sl sm:text-xl mb-4">{{ .Site.Params.introSubtitle | safeHTML}}</h2> -->
-
-      {{ range .Site.Params.about }}
-      <p>{{ .content }}</p>
-      {{ end }}
+  <div class="about-section section-tint mb-4 sm:mb-8">
+    <div class="max-w-screen-lg mx-auto">
+      <div class="px-6 py-12 sm:py-16 flex flex-col gap-5 text-base leading-relaxed">
+        <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ .Site.Params.aboutTitle | default "About us" }}</h2>
+        <div class="flex flex-col gap-4">
+          {{ range $i, $p := .Site.Params.about }}
+          <p class="text-slate-600 dark:text-slate-300">{{ $p.content }}</p>
+          {{ end }}
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -74,24 +57,4 @@
     rewind: true,
     loop: true
   });
-  // set header to be dark
-  window.onscroll = () => {};
 </script>
-<style>
-  /* use inline style to make */
-.header {
-  min-height: 4rem;
-  /* color: white !important; */
-  background-color: rgba(147, 197, 253, 0.75) !important;
-  backdrop-filter: blur(16px) !important;
-  /* box-shadow: 0 0 24px rgba(0, 0, 0, 0.1) !important; */
-  box-shadow: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
-}
-.header:is(.dark *) {
-  background-color: rgba(31, 41, 55, 0.75) !important;
-  backdrop-filter: blur(16px) !important;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.1) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
-}
-</style>

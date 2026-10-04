@@ -2,8 +2,8 @@
 <html lang="{{ .Lang }}" itemscope itemtype="http://schema.org/WebPage">
   {{- partial "head.html" . -}}
   <body class="dark:bg-gray-800 dark:text-white relative flex flex-col min-h-screen">
-    {{- partial "header.html" . -}}
-    <main class="flex-1">
+    {{- partial "navbar.html" . -}}
+    <main class="flex-1{{ if .IsHome }} main--immersive{{ end }}">
     {{- block "main" . }}{{- end }}
     </main>
     {{- partial "footer.html" . -}}
