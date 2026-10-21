@@ -35,18 +35,24 @@
               {{ $url.name }}
             </a>
           {{ else if $url.id }}
-            {{ $hideLink := false }}
+            {{ $authorLink := printf "/people/%s" $url.id }}
             {{ range $people := $peopleSlice }}
               {{ if and (eq $url.id $people.Params.name) (eq $people.Layout "alumni") }}
-                {{ $hideLink = true }}
+                {{ $homepage := $people.Params.homepage | default "" }}
+                {{ range $people.Params.social }}
+                  {{ if eq .website "blog" }}
+                    {{ $homepage = .url }}
+                  {{ end }}
+                {{ end }}
+                {{ $authorLink = $homepage }}
               {{ end }}
             {{ end }}
-            {{ if $hideLink }}
-              <div>{{ $url.name }}</div>
-            {{ else }}
-              <a style="text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: #d4d4d8;" href="/people/{{ $url.id }}">
+            {{ if $authorLink }}
+              <a style="text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: #d4d4d8;" href="{{ $authorLink }}">
                 {{ $url.name }}
               </a>
+            {{ else }}
+              <div>{{ $url.name }}</div>
             {{ end }}
           {{ else }}
             <div>{{ $url.name }}</div>

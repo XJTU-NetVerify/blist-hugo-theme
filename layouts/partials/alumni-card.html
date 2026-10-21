@@ -1,10 +1,25 @@
+{{ $homepage := .Params.homepage | default "" }}
+{{ range .Params.social }}
+  {{ if eq .website "blog" }}
+    {{ $homepage = .url }}
+  {{ end }}
+{{ end }}
 <div class="flex gap-2 items-center">
+  {{ if $homepage }}
+  <a href="{{ $homepage }}">
+  {{ end }}
   {{ if .Params.image }}
   <img src="{{ .Params.image }}" alt="{{ .Params.title }}" class="m-0 rounded-full shadow-sm h-16 w-16 object-cover" />
   {{ else }}
   <img src="/images/placeholder-avatar.svg" alt="{{ .Params.title }}" class="m-0 rounded-full shadow-sm h-16 w-16 object-cover" />
   {{ end }}
+  {{ if $homepage }}
+  </a>
+  {{ end }}
   <div class="flex flex-col">
+    {{ if $homepage }}
+    <a href="{{ $homepage }}">
+    {{ end }}
     <div class="text-lg font-semibold">
       {{ if eq $.Page.Language.Label "English" }}
         {{ .Params.title }}
@@ -14,6 +29,9 @@
         {{ replace $title "@2" .Params.name_cn }}
       {{ end }}
     </div>
+    {{ if $homepage }}
+    </a>
+    {{ end }}
 
     <div class="text-sm text-gray-500">
       {{ .Params.degree }}

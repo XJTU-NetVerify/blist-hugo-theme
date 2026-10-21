@@ -1,29 +1,36 @@
 {{ $alumniPage := eq .Layout "alumni" }}
-<div class="p-0 flex flex-col justify-center items-center">
-  {{ if $alumniPage }}
-  <div class="relative">
-  {{ else }}
-  <a href="{{ .Permalink }}">
-  <div class="relative">
+{{ $authorLink := .Permalink }}
+{{ if $alumniPage }}
+  {{ $authorLink = .Params.homepage | default "" }}
+  {{ range .Params.social }}
+    {{ if eq .website "blog" }}
+      {{ $authorLink = .url }}
+    {{ end }}
   {{ end }}
+{{ end }}
+<div class="p-0 flex flex-col justify-center items-center">
+  {{ if $authorLink }}
+  <a href="{{ $authorLink }}">
+  {{ end }}
+  <div class="relative">
     {{ if .Params.image }}
     <img src="{{ .Params.image }}" alt="{{ .Params.title }}" class="m-0 mb-4 rounded-full shadow-sm h-24 w-24 object-cover" style="height: 6rem; width: 6rem;" />
     {{ else }}
     <img src="/images/placeholder-avatar.svg" alt="{{ .Params.title }}" class="m-0 mb-4 rounded-full shadow-sm h-24 w-24 object-cover" style="height: 6rem; width: 6rem;" />
     {{ end }}
   </div>
-  {{ if not $alumniPage }}
+  {{ if $authorLink }}
   </a>
   {{ end }}
 
   <div class="my-2 flex flex-col flex-wrap items-center">
     <div class="p-0">
-      {{ if $alumniPage }}
-      <div class="text-xl font-semibold">{{ .Params.title }}</div>
-      {{ else }}
-      <a href="{{ .Permalink }}">
+      {{ if $authorLink }}
+      <a href="{{ $authorLink }}">
         <div class="text-xl font-semibold">{{ .Params.title }}</div>
       </a>
+      {{ else }}
+      <div class="text-xl font-semibold">{{ .Params.title }}</div>
       {{ end }}
     </div>
 
