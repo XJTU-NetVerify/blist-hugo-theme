@@ -34,7 +34,7 @@
     {{ end }}
 
     <div class="text-sm text-gray-500">
-      {{ .Params.degree }}
+      {{ .Params.degree }}{{ with .Params.graduation }}, {{ . }}{{ end }}
     </div>
     <div class="text-sm font-light italic text-gray-500">
       Now: {{ .Params.work }}
