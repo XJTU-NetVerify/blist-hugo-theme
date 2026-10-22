@@ -2,7 +2,7 @@
   {{- partial "intro.html" . -}}
   {{ $frontBundle := .Site.Params.frontBundle | default "blog" }}
   {{ $newsPages := where (where .Site.RegularPages.ByDate.Reverse "Type" $frontBundle) "Layout" .Language.Lang }}
-  {{ $limit := 10 }}
+  {{ $limit := .Site.Params.newsLimit | default 10 }}
   {{ $hasMore := gt (len $newsPages) $limit }}
   {{ $moreLabel := "Show more news" }}
   {{ $lessLabel := "Show fewer news" }}
