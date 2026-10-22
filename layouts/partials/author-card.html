@@ -27,10 +27,10 @@
     <div class="p-0">
       {{ if $authorLink }}
       <a href="{{ $authorLink }}">
-        <div class="text-xl font-semibold">{{ .Params.title }}</div>
+        <div class="text-xl font-semibold">{{ partial "person-name.html" . }}</div>
       </a>
       {{ else }}
-      <div class="text-xl font-semibold">{{ .Params.title }}</div>
+      <div class="text-xl font-semibold">{{ partial "person-name.html" . }}</div>
       {{ end }}
     </div>
 

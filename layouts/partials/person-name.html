@@ -1,0 +1,6 @@
+{{- /* Chinese name on the Chinese site, English name otherwise */ -}}
+{{- if and (eq .Language.Lang "zh") .Params.name_cn -}}
+  {{- .Params.name_cn -}}
+{{- else -}}
+  {{- or .Params.name_en .Params.title -}}
+{{- end -}}

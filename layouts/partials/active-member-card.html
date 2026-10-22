@@ -10,7 +10,7 @@
   <div class="sm:my-2 flex flex-col flex-wrap sm:items-start">
     <div class="p-0">
       <a href="{{ .Permalink }}">
-        <div class="text-xl font-semibold">{{ .Params.title }}</div>
+        <div class="text-xl font-semibold">{{ partial "person-name.html" . }}</div>
       </a>
     </div>
 
